@@ -27,10 +27,11 @@ namespace ProtodefSharp
 		};
 
 		public Dictionary<string, ProtodefType> Types = new();
-		public ProtodefNamespace RootNamespace = new();
+		public ProtodefNamespace RootNamespace;
 
 		public Protodef()
 		{
+			RootNamespace = new ProtodefNamespace(this);
 			foreach (KeyValuePair<string, ProtodefType> type in Protodef.NativeTypes)
 			{
 				AddType(type.Key, type.Value);
@@ -42,15 +43,25 @@ namespace ProtodefSharp
 			Types[name] = type;
 		}
 
-		public void Parse(string data) => Parse(JToken.Parse(data));
-		public void Parse(JToken data)
+		public void ParseTypes(string data) => ParseTypes(JToken.Parse(data));
+		public void ParseTypes(JToken data)
 		{
 			if (data.Type != JTokenType.Object) throw new Exception("Root JToken is not an object!");
 			JObject obj = (JObject)data;
 
 		}
 
+		public byte[] CreatePacketBuffer(string packedId, JToken packetData)
+		{
+			return new byte[0];
+		}
 
+		public JToken ParsePacketBuffer(byte[] data)
+		{
+			return JToken.FromObject(null);
+		}
+
+		// static methods
 
 		public static JObject ParseOptions(JToken data)
 		{
@@ -81,16 +92,51 @@ namespace ProtodefSharp
 
 	public class ProtodefNamespace
 	{
+		public Protodef Protodef;
 		public string Name;
 		public Dictionary<string, ProtodefNamespace> SubNamespaces = new();
-		public ProtodefNamespace(string name = "root")
+		public Dictionary<string, ProtodefType> Types = new();
+		public ProtodefNamespace(Protodef parent, string name = "root")
 		{
+			Protodef = parent;
 			Name = name;
+		}
+
+		public ProtodefType ResolveType(string id)
+		{
+			if (Types.ContainsKey(id)) return Types[id];
+			if (Protodef.Types.ContainsKey(id)) return Protodef.Types[id];
+			throw new Exception($"Type not found: {id}");
+		}
+
+		public JToken ReadPath(string typeName, MemoryStream stream)
+		{
+			ProtodefType type = ResolveType(typeName);
+
+			ProtodefContext ctx = new ProtodefContext()
+			{
+				Stream = stream,
+				Protodef = Protodef,
+				Namespace = this
+			};
+
+			return type.Read(ctx);
+		}
+
+		public JToken Read(string typeName, ProtodefContext ctx, JObject opts = null)
+		{
+			ProtodefType type = ResolveType(typeName);
+
+			if (opts != null) ctx.Options = opts;
+
+			return type.Read(ctx);
 		}
 	}
 
 	public class ProtodefContext
 	{
+		public ProtodefContext() { }
+
 		public Stream Stream = null;
 		public JObject Options = new JObject();
 		public Protodef Protodef;

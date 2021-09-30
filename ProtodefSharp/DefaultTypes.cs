@@ -247,20 +247,25 @@ namespace ProtodefSharp.DefaultTypes
 			if (ctx.Options == null) throw new Exception("Options cannot be null for ProtodefType 'buffer'!");
 			if (ctx.Options.Type != JTokenType.Object) throw new Exception("Options must be an object for ProtodefType 'buffer'!");
 			JObject opts = (JObject)ctx.Options;
-			if (opts.ContainsKey("countType")) {
+
+			int count;
+			
+			if (opts.ContainsKey("countType"))
+			{
 				string countType = opts.GetValue("countType").ToObject<string>();
-				
+				count = ctx.Namespace.Read(countType, ctx).ToObject<int>();
 			} else
 			{
 				if (!opts.ContainsKey("count")) throw new Exception("Either 'countType' or 'count' must be an option for ProtodefType 'buffer'");
-				int count = opts.GetValue("count").ToObject<int>();
-				byte[] buf = new byte[count];
-				for (int i = 0; i < count; i++)
-				{
-					//buf += (byte)ctx.Stream.ReadByte();
-				}
-
+				count = opts.GetValue("count").ToObject<int>();
 			}
+
+			byte[] buf = new byte[count];
+			for (int i = 0; i < count; i++)
+			{
+				buf[i] = (byte)ctx.Stream.ReadByte();
+			}
+			return JToken.FromObject(buf);
 		}
 		public new void Write(ProtodefContext ctx)
 		{
