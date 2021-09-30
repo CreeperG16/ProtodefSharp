@@ -28,6 +28,7 @@ namespace ProtodefSharp
 
 		public Dictionary<string, ProtodefType> Types = new();
 		public ProtodefNamespace RootNamespace;
+		public Dictionary<string, ProtodefNamespace> SubNamespaces = new();
 
 		public Protodef()
 		{
@@ -51,15 +52,8 @@ namespace ProtodefSharp
 
 		}
 
-		public byte[] CreatePacketBuffer(string packedId, JToken packetData)
-		{
-			return new byte[0];
-		}
-
-		public JToken ParsePacketBuffer(byte[] data)
-		{
-			return JToken.FromObject(null);
-		}
+		public byte[] CreatePacketBuffer(string packetId, JToken data) => RootNamespace.CreatePacketBuffer(packetId, data);
+		public JToken ParsePacketBuffer(string packetId, byte[] data) => RootNamespace.ParsePacketBuffer(packetId, data);
 
 		// static methods
 
@@ -94,12 +88,29 @@ namespace ProtodefSharp
 	{
 		public Protodef Protodef;
 		public string Name;
-		public Dictionary<string, ProtodefNamespace> SubNamespaces = new();
 		public Dictionary<string, ProtodefType> Types = new();
 		public ProtodefNamespace(Protodef parent, string name = "root")
 		{
 			Protodef = parent;
 			Name = name;
+		}
+
+		public byte[] CreatePacketBuffer(string packetId, JToken packetData)
+		{
+			MemoryStream stream = new MemoryStream();
+
+			ProtodefType type = ResolveType(packetId);
+
+			return stream.ToArray();
+		}
+
+		public JToken ParsePacketBuffer(string packetId, byte[] data)
+		{
+			MemoryStream stream = new MemoryStream();
+
+			ProtodefType type = ResolveType(packetId);
+
+			return JToken.FromObject(null);
 		}
 
 		public ProtodefType ResolveType(string id)
