@@ -31,7 +31,15 @@ namespace ProtodefSharp
 
 		public Protodef()
 		{
-				
+			foreach (KeyValuePair<string, ProtodefType> type in Protodef.NativeTypes)
+			{
+				AddType(type.Key, type.Value);
+			}
+		}
+
+		public void AddType(string name, ProtodefType type)
+		{
+			Types[name] = type;
 		}
 
 		public void Parse(string data) => Parse(JToken.Parse(data));
