@@ -28,7 +28,6 @@ namespace ProtodefSharp
 
 		public Dictionary<string, ProtodefType> Types = new();
 		public ProtodefNamespace RootNamespace = new();
-		public Dictionary<string, ProtodefNamespace> Namespaces = new();
 
 		public Protodef()
 		{
@@ -42,13 +41,43 @@ namespace ProtodefSharp
 			JObject obj = (JObject)data;
 
 		}
+
+
+
+		public static JObject ParseOptions(JToken data)
+		{
+			if (data.Type == JTokenType.Undefined)
+			{
+				return new JObject();
+			} else if(data.Type == JTokenType.String)
+			{
+				JObject obj = new JObject();
+				obj.Add("type", data);
+				return obj;
+			} else if (data.Type == JTokenType.Array)
+			{
+				JArray arr = (JArray)data;
+				JObject obj = new JObject();
+				obj.Add("type", arr[0]);
+				obj.Add("typeArgs", arr[1]);
+				return obj;
+			} else if (data.Type == JTokenType.Object)
+			{
+				return (JObject)data;
+			} else
+			{
+				throw new Exception($"Cannot parse type options for {data.Type.ToString()}");
+			}
+		}
 	}
 
 	public class ProtodefNamespace
 	{
+		public string Name;
+		public Dictionary<string, ProtodefNamespace> SubNamespaces = new();
 		public ProtodefNamespace(string name = "root")
 		{
-
+			Name = name;
 		}
 	}
 

@@ -249,7 +249,7 @@ namespace ProtodefSharp.DefaultTypes
 			JObject opts = (JObject)ctx.Options;
 			if (opts.ContainsKey("countType")) {
 				string countType = opts.GetValue("countType").ToObject<string>();
-				// TODO!!
+				
 			} else
 			{
 				if (!opts.ContainsKey("count")) throw new Exception("Either 'countType' or 'count' must be an option for ProtodefType 'buffer'");
