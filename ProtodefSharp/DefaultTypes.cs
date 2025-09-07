@@ -67,7 +67,7 @@ namespace ProtodefSharp.DefaultTypes
 		public new JToken Read(ProtodefContext ctx)
 		{
 			byte[] data = new byte[2];
-			ctx.Stream.Read(data, 0, 2);
+			ctx.Stream.ReadExactly(data, 0, 2);
 			return JToken.FromObject(BitConverter.ToInt16(data));
 		}
 		public new void Write(ProtodefContext ctx)
@@ -83,7 +83,7 @@ namespace ProtodefSharp.DefaultTypes
 		public new JToken Read(ProtodefContext ctx)
 		{
 			byte[] data = new byte[2];
-			ctx.Stream.Read(data, 0, 2);
+			ctx.Stream.ReadExactly(data, 0, 2);
 			return JToken.FromObject(BitConverter.ToUInt16(data));
 		}
 		public new void Write(ProtodefContext ctx)
@@ -99,7 +99,7 @@ namespace ProtodefSharp.DefaultTypes
 		public new JToken Read(ProtodefContext ctx)
 		{
 			byte[] data = new byte[4];
-			ctx.Stream.Read(data, 0, 4);
+			ctx.Stream.ReadExactly(data, 0, 4);
 			return JToken.FromObject(BitConverter.ToInt32(data));
 		}
 		public new void Write(ProtodefContext ctx)
@@ -115,7 +115,7 @@ namespace ProtodefSharp.DefaultTypes
 		public new JToken Read(ProtodefContext ctx)
 		{
 			byte[] data = new byte[4];
-			ctx.Stream.Read(data, 0, 4);
+			ctx.Stream.ReadExactly(data, 0, 4);
 			return JToken.FromObject(BitConverter.ToUInt32(data));
 		}
 		public new void Write(ProtodefContext ctx)
@@ -131,7 +131,7 @@ namespace ProtodefSharp.DefaultTypes
 		public new JToken Read(ProtodefContext ctx)
 		{
 			byte[] data = new byte[4];
-			ctx.Stream.Read(data, 0, 4);
+			ctx.Stream.ReadExactly(data, 0, 4);
 			return JToken.FromObject(BitConverter.ToSingle(data));
 		}
 		public new void Write(ProtodefContext ctx)
@@ -147,7 +147,7 @@ namespace ProtodefSharp.DefaultTypes
 		public new JToken Read(ProtodefContext ctx)
 		{
 			byte[] data = new byte[8];
-			ctx.Stream.Read(data, 0, 8);
+			ctx.Stream.ReadExactly(data, 0, 8);
 			return JToken.FromObject(BitConverter.ToDouble(data));
 		}
 		public new void Write(ProtodefContext ctx)
@@ -163,7 +163,7 @@ namespace ProtodefSharp.DefaultTypes
 		public new JToken Read(ProtodefContext ctx)
 		{
 			byte[] data = new byte[8];
-			ctx.Stream.Read(data, 0, 8);
+			ctx.Stream.ReadExactly(data, 0, 8);
 			return JToken.FromObject(BitConverter.ToInt64(data));
 		}
 		public new void Write(ProtodefContext ctx)
@@ -179,7 +179,7 @@ namespace ProtodefSharp.DefaultTypes
 		public new JToken Read(ProtodefContext ctx)
 		{
 			byte[] data = new byte[8];
-			ctx.Stream.Read(data, 0, 8);
+			ctx.Stream.ReadExactly(data, 0, 8);
 			return JToken.FromObject(BitConverter.ToUInt64(data));
 		}
 		public new void Write(ProtodefContext ctx)
